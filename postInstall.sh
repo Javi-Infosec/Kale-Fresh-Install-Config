@@ -36,14 +36,14 @@ STAGE=0                                                         # Where are we u
 TOTAL=$( grep '(${STAGE}/${TOTAL})' $0 | wc -l );(( TOTAL-- ))  # How many things have we got todo
 
 ##### Check if we are running as root - else this script will fail (hard!)
-if [[ "${EUID}" -ne 0 ]]; then
-  echo -e ' '${RED}'[!]'${RESET}" This script must be ${RED}run as root${RESET}" 1>&2
-  echo -e ' '${RED}'[!]'${RESET}" Quitting..." 1>&2
-  exit 1
-else
-  echo -e " ${BLUE}[*]${RESET} ${BOLD}Kali Linux rolling post-install script${RESET}"
-  sleep 2s
-fi
+#if [[ "${EUID}" -ne 0 ]]; then
+#  echo -e ' '${RED}'[!]'${RESET}" This script must be ${RED}run as root${RESET}" 1>&2
+#  echo -e ' '${RED}'[!]'${RESET}" Quitting..." 1>&2
+#  exit 1
+#else
+#  echo -e " ${BLUE}[*]${RESET} ${BOLD}Kali Linux rolling post-install script${RESET}"
+#  sleep 2s
+#fi
 
 #-----------------------START-------------------------
 

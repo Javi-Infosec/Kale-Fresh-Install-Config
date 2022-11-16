@@ -93,3 +93,9 @@ sudo dpkg -i ./tmp/lsd_0.23.1_amd64.deb
 # Installing bat - alias should come from config files
 (( STAGE++ )); echo -e "\n\n ${GREEN}[+]${RESET} (${STAGE}/${TOTAL})  ${GREEN}Installing bat. ${RESET}"
 sudo apt install bat -y
+
+# Setup git config
+(( STAGE++ )); echo -e "\n\n ${GREEN}[+]${RESET} (${STAGE}/${TOTAL})  ${GREEN}Configuring git user. ${RESET}"
+git config --global user.email "javi.infosec@gmail.com"
+git config --global user.name "javi"
+

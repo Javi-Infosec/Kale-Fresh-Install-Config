@@ -10,7 +10,7 @@
 #  Designed for: Kali Linux Rolling [x64] (VM - VMware)       #
 #     Tested on: Kali Linux 2022.3 x64			      #
 #-Notes-------------------------------------------------------#
-#  Run  straight after a clean install of Kali         #
+#  Run  straight after a clean install of Kali         	      #
 #                             ---                             #
 #-------------------------------------------------------------#
 
@@ -35,26 +35,61 @@ RESET="\033[00m"       # Normal
 STAGE=0                                                         # Where are we up to
 TOTAL=$( grep '(${STAGE}/${TOTAL})' $0 | wc -l );(( TOTAL-- ))  # How many things have we got todo
 
-##### Check if we are running as root - else this script will fail (hard!)
-#if [[ "${EUID}" -ne 0 ]]; then
-#  echo -e ' '${RED}'[!]'${RESET}" This script must be ${RED}run as root${RESET}" 1>&2
-#  echo -e ' '${RED}'[!]'${RESET}" Quitting..." 1>&2
-#  exit 1
-#else
-#  echo -e " ${BLUE}[*]${RESET} ${BOLD}Kali Linux rolling post-install script${RESET}"
-#  sleep 2s
-#fi
+##### Check if we are running as javi - else create it
+if [[ "${EUID}" -ne 1337 ]]; then
+  echo -e ' '${RED}'[!]'${RESET}" This script must be ${RED}run as javi(uid 1337)${RESET}" 1>&2
+  echo -e ' '${YELLOW}'[!]'${RESET}" Checking if javi is created" 1>&2
+  if (grep -q 'javi' /etc/passwd 2>/dev/null); then
+	echo -e ' '${YELLOW}'[!]'${RESET}" javi exists, please check UID or sudo." 1>&2
+	exit 1
+  else
+  	echo -e ' '${RED}'[!]'${RESET}" ${RED}javi is not created.${RESET} Creating it..." 1>&2
+	sudo useradd -u 1337 -m javi && sudo usermod -aG sudo javi && echo "javi" | sudo passwd javi;
+	sudo chsh -s /usr/bin/zsh javi
+ 	echo -e ' '${YELLOW}'[*]'${RESET}" javi has been created please login with the user." 1>&2
+  	exit 1
+  fi
+
+else
+  echo -e " ${BLUE}[*]${RESET} ${BOLD}Kali Linux rolling post-install script${RESET}"
+  sleep 1s
+fi
 
 #-----------------------START-------------------------
 
 #Updating Kali
 (( STAGE++ )); echo -e "\n\n ${GREEN}[+]${RESET} (${STAGE}/${TOTAL})  ${GREEN}Updating Kali.${RESET}"
 sudo apt update -y && sudo apt upgrade -y && sudo apt autoremove -y
-#Creating New User
-#(( STAGE++ )); echo -e "\n\n ${GREEN}[+]${RESET} (${STAGE}/${TOTAL})  ${GREEN}Creating new user.${RESET}"
-#useradd -m javi && usermod -aG sudo javi
 
 #Adding NerdFont
 (( STAGE++ )); echo -e "\n\n ${GREEN}[+]${RESET} (${STAGE}/${TOTAL})  ${GREEN}Adding Patched FiraCode Medium Font.${RESET}"
-curl -fLo "Fira Code Medium Nerd Font Complete Mono.ttf" --create-dirs --output-dir ~/.local/share/fonts \
-"https://github.com/ryanoasis/nerd-fonts/blob/master/patched-fonts/FiraCode/Medium/complete/Fira%20Code%20Medium%20Nerd%20Font%20Complete%20Mono.ttf" \
+file="~/.local/share/fonts/Fira Code Medium Nerd Font Complete Mono.ttf";
+if [ ! -e "${file}" ]; then
+	curl -fLo "Fira Code Medium Nerd Font Complete Mono.ttf" --create-dirs --output-dir ~/.local/share/fonts \
+	"https://github.com/ryanoasis/nerd-fonts/blob/master/patched-fonts/FiraCode/Medium/complete/Fira%20Code%20Medium%20Nerd%20Font%20Complete%20Mono.ttf"
+	fc-cache -fv
+fi
+#Setting Keyboard to Spanish
+(( STAGE++ )); echo -e "\n\n ${GREEN}[+]${RESET} (${STAGE}/${TOTAL})  ${GREEN}Setting keyboard to Spanish. ${RESET}"
+setxkbmap es
+
+
+#Installing Brave
+(( STAGE++ )); echo -e "\n\n ${GREEN}[+]${RESET} (${STAGE}/${TOTAL})  ${GREEN}Installing Brave Web Browser. ${RESET}"
+sudo apt install apt-transport-https curl -y
+sudo curl -fsSLo /usr/share/keyrings/brave-browser-archive-keyring.gpg https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg
+echo "deb [signed-by=/usr/share/keyrings/brave-browser-archive-keyring.gpg arch=amd64] https://brave-browser-apt-release.s3.brave.com/ stable main"| \
+sudo tee /etc/apt/sources.list.d/brave-browser-release.list
+sudo apt update
+sudo apt install brave-browser
+
+
+#Installing lsd - alias should come from config files
+
+(( STAGE++ )); echo -e "\n\n ${GREEN}[+]${RESET} (${STAGE}/${TOTAL})  ${GREEN}Installing lsd. ${RESET}"
+curl -fLo "lsd_0.23.1_amd64.deb" --create-dirs --output-dir ./tmp "https://github.com/Peltoche/lsd/releases/download/0.23.1/lsd_0.23.1_amd64.deb" && \
+sudo dpkg -i ./tmp/lsd_0.23.1_amd64.deb
+
+# Installing bat - alias should come from config files
+(( STAGE++ )); echo -e "\n\n ${GREEN}[+]${RESET} (${STAGE}/${TOTAL})  ${GREEN}Installing bat. ${RESET}"
+sudo apt install bat -y

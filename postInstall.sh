@@ -75,6 +75,9 @@ fi
 (( STAGE++ )); echo -e "\n\n ${GREEN}[+]${RESET} (${STAGE}/${TOTAL})  ${GREEN}Setting keyboard to Spanish. ${RESET}"
 setxkbmap es
 
+#Change Timezone
+(( STAGE++ )); echo -e "\n\n ${GREEN}[+]${RESET} (${STAGE}/${TOTAL})  ${GREEN}Setting Timezone to Madrid. ${RESET}"
+sudo timedatectl set-timezone  Europe/Madrid
 
 #Installing Brave
 (( STAGE++ )); echo -e "\n\n ${GREEN}[+]${RESET} (${STAGE}/${TOTAL})  ${GREEN}Installing Brave Web Browser. ${RESET}"

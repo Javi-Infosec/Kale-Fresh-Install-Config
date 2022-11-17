@@ -114,7 +114,7 @@ if [ $? = 0 ]; then
     echo -e "\n\n ${GREEN}[+]${RESET}  ${GREEN}Checked out config. ${RESET}";
 else
     echo -e "\n\n ${YELLOW}[!]${RESET} ${YELLOW}Backing up pre-existing dot iles. ${RESET}"
-    /usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME checkout 2>&1 | egrep "\s+\." | awk {'print $1'} | xargs -I{} mv {} .config-backup/{}
+    /usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME checkout 2>&1 | egrep "\s+\." | awk {'print $1'} | xargs -I{} mv $HOME/{} .config-backup/{}
     /usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME checkout
     echo -e "\n\n ${GREEN}[+]${RESET}  ${GREEN}Checked out config. ${RESET}";
 

@@ -36,6 +36,9 @@ STAGE=0                                                         # Where are we u
 TOTAL=$( grep '(${STAGE}/${TOTAL})' $0 | wc -l );(( TOTAL-- ))  # How many things have we got todo
 
 ##### Check if we are running as javi - else create it
+##### Comment those lines you don't need to have a user with my name :D 
+##### In case you DO want to have a user with my name, CHANGE your password
+
 if [[ "${EUID}" -ne 1337 ]]; then
   echo -e ' '${RED}'[!]'${RESET}" This script must be ${RED}run as javi(uid 1337)${RESET}" 1>&2
   echo -e ' '${YELLOW}'[!]'${RESET}" Checking if javi is created" 1>&2
@@ -98,4 +101,23 @@ sudo apt install bat -y
 (( STAGE++ )); echo -e "\n\n ${GREEN}[+]${RESET} (${STAGE}/${TOTAL})  ${GREEN}Configuring git user. ${RESET}"
 git config --global user.email "javi.infosec@gmail.com"
 git config --global user.name "javi"
+
+# Setup git alias to get dotfiles
+#Reference https://www.atlassian.com/git/tutorials/dotfiles
+(( STAGE++ )); echo -e "\n\n ${GREEN}[+]${RESET} (${STAGE}/${TOTAL})  ${GREEN}Configuring git aliases. ${RESET}"
+echo ".cfg" >> $HOME/.gitignore
+git clone --bare git@github.com:Javi-Infosec/.cfg.git $HOME/.cfg
+#alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
+mkdir -p $HOME/.cfg-backup
+/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME checkout
+if [ $? = 0 ]; then
+    echo -e "\n\n ${GREEN}[+]${RESET}  ${GREEN}Checked out config. ${RESET}";
+else
+    echo -e "\n\n ${YELLOW}[!]${RESET} ${YELLOW}Backing up pre-existing dot iles. ${RESET}"
+    /usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME checkout 2>&1 | egrep "\s+\." | awk {'print $1'} | xargs -I{} mv {} .config-backup/{}
+    /usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME checkout
+    echo -e "\n\n ${GREEN}[+]${RESET}  ${GREEN}Checked out config. ${RESET}";
+
+fi;
+/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME config status.showUntrackedFiles no
 

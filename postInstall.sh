@@ -37,7 +37,6 @@ TOTAL=$( grep '(${STAGE}/${TOTAL})' $0 | wc -l );(( TOTAL-- ))  # How many thing
 
 ##### Check if we are running as javi - else create it
 ##### Comment those lines you don't need to have a user with my name :D 
-##### In case you DO want to have a user with my name, CHANGE your password
 
 if [[ "${EUID}" -ne 1337 ]]; then
   echo -e ' '${RED}'[!]'${RESET}" This script must be ${RED}run as javi(uid 1337)${RESET}" 1>&2
@@ -47,9 +46,9 @@ if [[ "${EUID}" -ne 1337 ]]; then
 	exit 1
   else
   	echo -e ' '${RED}'[!]'${RESET}" ${RED}javi is not created.${RESET} Creating it..." 1>&2
-	sudo useradd -u 1337 -m javi && sudo usermod -aG sudo javi && echo "javi" | sudo passwd javi;
+	sudo useradd -u 1337 -m javi && sudo usermod -aG sudo javi;
 	sudo chsh -s /usr/bin/zsh javi
- 	echo -e ' '${YELLOW}'[*]'${RESET}" javi has been created please login with the user." 1>&2
+ 	echo -e ' '${YELLOW}'[*]'${RESET}" javi has been created, ${RED}CHANGE the password${RESET} and  login with the user." 1>&2
   	exit 1
   fi
 

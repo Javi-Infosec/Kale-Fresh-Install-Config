@@ -65,6 +65,8 @@ sudo apt update -y && sudo apt upgrade -y && sudo apt autoremove -y
 
 #Adding NerdFont
 (( STAGE++ )); echo -e "\n\n ${GREEN}[+]${RESET} (${STAGE}/${TOTAL})  ${GREEN}Adding Patched FiraCode Medium Font.${RESET}"
+
+sudo apt remove fonts-firacode -y
 file="~/.local/share/fonts/Fira Code Medium Nerd Font Complete Mono.ttf";
 if [ ! -e "${file}" ]; then
 	curl -fLo "Fira Code Medium Nerd Font Complete Mono.ttf" --create-dirs --output-dir ~/.local/share/fonts \

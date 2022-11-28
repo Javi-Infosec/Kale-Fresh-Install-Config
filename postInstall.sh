@@ -5,7 +5,7 @@
 #  Personal post-install script for Kali Linux Rolling        #
 #-Author(s)---------------------------------------------------#
 #  Javi.Infosec ~ Twitter		                      #
-#  Based on g0tmi1k kali.rolling.sh 	  		      #
+#  Based on @g0tmi1k kali.rolling.sh 	  		      #
 #-Operating System--------------------------------------------#
 #  Designed for: Kali Linux Rolling [x64] (VM - VMware)       #
 #     Tested on: Kali Linux 2022.3 x64			      #
@@ -20,7 +20,7 @@ if [ 1 -eq 0 ]; then    # This is never true, thus it acts as block comments ;)
 ################################################################################
 wget -qO postInstall.sh \
 https://raw.githubusercontent.com/Javi-Infosec/Kali-Post-Install/main/postInstall.sh \
-&& sudo bash postInstall.sh
+&& bash postInstall.sh
 ################################################################################
 fi
 
